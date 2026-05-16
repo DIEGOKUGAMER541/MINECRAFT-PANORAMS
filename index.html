@@ -1,140 +1,296 @@
 <!doctype html>
 <html lang="en">
-  <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panoramas MINECRAFT</title>
-    <link
-      rel="icon" href="https://mc-heads.net/avatar/diegokugamer541" type="image/png"/>
-  <script type="module">
-    import * as THREE from "https://unpkg.com/three/build/three.module.js";
-    const data = [...new URLSearchParams(location.href.split("?")[1])].reduce(
-      (a, [k, v]) => ((a[k] = v), a),
-      {},
-    );
-    const VALID_VERSIONS = [
-      "1.11",
-      "1.12",
-      "1.14",
-      "1.16",
-      "1.17",
-      "1.18",
-      "1.19",
-      "1.20",
-      "1.21",
-      "1.21.50",
-      "1.21.70",
-      "1.21.90",
-      "1.21.111",
-      "1.21.130",
-      "26.1",
-    ];
-    const rightMovement = ["1.21.111"];
-    const DEFAULT_VERSION = VALID_VERSIONS[VALID_VERSIONS.length - 1];
-    const version = VALID_VERSIONS.includes(data.v) ? data.v : DEFAULT_VERSION;
-    const velocity = isNaN(Number(data.r)) ? 0.0004 : Number(data.r);
-    const direction = rightMovement.includes(version) ? 1 : -1;
-    window.addEventListener("DOMContentLoaded", () => {
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(
-        75,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000,
-      );
-      const renderer = new THREE.WebGLRenderer();
-      THREE.ColorManagement.legacyMode = false;
-      renderer.outputEncoding = THREE.sRGBEncoding;
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.outputEncoding = THREE.sRGBEncoding;
-      renderer.toneMapping = THREE.LinearToneMapping;
-      renderer.gammaOutput = false;
-      window.addEventListener("resize", onWindowResize, false);
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panoramas MINECRAFT</title>
 
-      function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
+<link
+  rel="icon"
+  href="https://mc-heads.net/avatar/diegokugamer541"
+  type="image/png"
+/>
 
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      }
-      document.body.appendChild(renderer.domElement);
+<script type="module">
+import * as THREE from "https://unpkg.com/three/build/three.module.js";
 
-      // Crear un plano
-      const geometry = new THREE.PlaneGeometry(3, 3); // Anchura y altura del plano
-      const textureLoader = new THREE.TextureLoader();
+const data = [...new URLSearchParams(location.href.split("?")[1])].reduce(
+  (a, [k, v]) => ((a[k] = v), a),
+  {},
+);
 
-      function loadMaterial(n) {
-        return new THREE.MeshBasicMaterial({
-          map: textureLoader.load(
-            `./${version}/panorama_${n}.png`,
-          ),
-          color: new THREE.Color(0xffffff).multiplyScalar(0.5),
-        });
-      }
+const VALID_VERSIONS = [
+  "1.11",
+  "1.12",
+  "1.14",
+  "1.16",
+  "1.17",
+  "1.18",
+  "1.19",
+  "1.20",
+  "1.21",
+  "1.21.50",
+  "1.21.70",
+  "1.21.90",
+  "1.21.111",
+  "1.21.130",
+  "26.1",
+];
 
-      const materialFront = loadMaterial(0);
-      const front = new THREE.Mesh(geometry, materialFront);
-      scene.add(front);
+const rightMovement = ["1.21.111"];
 
-      const materialRight = loadMaterial(1);
-      const left = new THREE.Mesh(geometry, materialRight);
-      left.rotation.y = -Math.PI / 2;
-      left.position.x = 1.5;
-      left.position.z = 1.5;
-      scene.add(left);
+const DEFAULT_VERSION = VALID_VERSIONS[VALID_VERSIONS.length - 1];
 
-      const materialBack = loadMaterial(2);
-      const back = new THREE.Mesh(geometry, materialBack);
-      back.rotation.y = Math.PI;
-      back.position.z = 3;
-      scene.add(back);
+const version = VALID_VERSIONS.includes(data.v)
+  ? data.v
+  : DEFAULT_VERSION;
 
-      const materialLeft = loadMaterial(3);
-      const right = new THREE.Mesh(geometry, materialLeft);
-      right.rotation.y = Math.PI / 2;
-      right.position.x = -1.5;
-      right.position.z = 1.5;
-      scene.add(right);
+const velocity = isNaN(Number(data.r))
+  ? 0.0004
+  : Number(data.r);
 
-      const materialUp = loadMaterial(4);
-      const top = new THREE.Mesh(geometry, materialUp);
-      top.rotation.x = Math.PI / 2;
-      top.position.z = 1.5;
-      top.position.y = 1.5;
-      scene.add(top);
+const direction = rightMovement.includes(version)
+  ? 1
+  : -1;
 
-      const materialDown = loadMaterial(5);
-      const bottom = new THREE.Mesh(geometry, materialDown);
-      bottom.rotation.x = -Math.PI / 2;
-      bottom.position.z = 1.5;
-      bottom.position.y = -1.5;
-      scene.add(bottom);
+window.addEventListener("DOMContentLoaded", () => {
 
-      // Configuración de la cámara
-      camera.position.z = 1.5;
+  const scene = new THREE.Scene();
 
-      // Animación del plano
-      const animate = () => {
-        requestAnimationFrame(animate);
+  const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000,
+  );
 
-        camera.rotation.y += direction * velocity;
-        renderer.render(scene, camera);
-      };
+  const renderer = new THREE.WebGLRenderer();
 
-      animate();
+  THREE.ColorManagement.legacyMode = false;
+
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.LinearToneMapping;
+  renderer.gammaOutput = false;
+
+  window.addEventListener("resize", onWindowResize, false);
+
+  function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
+  document.body.appendChild(renderer.domElement);
+
+  // Crear un plano
+  const geometry = new THREE.PlaneGeometry(3, 3);
+
+  const textureLoader = new THREE.TextureLoader();
+
+  function loadMaterial(n) {
+    return new THREE.MeshBasicMaterial({
+      map: textureLoader.load(
+        `./${version}/panorama_${n}.png`,
+      ),
+      color: new THREE.Color(0xffffff).multiplyScalar(0.5),
     });
-  </script>
-  <style>
-    body {
-      margin: 0;
-    }
-    canvas {
-      display: block;
-      filter: contrast(1.6);
-    }
-  </style>
+  }
+
+  const materialFront = loadMaterial(0);
+
+  const front = new THREE.Mesh(geometry, materialFront);
+
+  scene.add(front);
+
+  const materialRight = loadMaterial(1);
+
+  const left = new THREE.Mesh(geometry, materialRight);
+
+  left.rotation.y = -Math.PI / 2;
+  left.position.x = 1.5;
+  left.position.z = 1.5;
+
+  scene.add(left);
+
+  const materialBack = loadMaterial(2);
+
+  const back = new THREE.Mesh(geometry, materialBack);
+
+  back.rotation.y = Math.PI;
+  back.position.z = 3;
+
+  scene.add(back);
+
+  const materialLeft = loadMaterial(3);
+
+  const right = new THREE.Mesh(geometry, materialLeft);
+
+  right.rotation.y = Math.PI / 2;
+  right.position.x = -1.5;
+  right.position.z = 1.5;
+
+  scene.add(right);
+
+  const materialUp = loadMaterial(4);
+
+  const top = new THREE.Mesh(geometry, materialUp);
+
+  top.rotation.x = Math.PI / 2;
+  top.position.z = 1.5;
+  top.position.y = 1.5;
+
+  scene.add(top);
+
+  const materialDown = loadMaterial(5);
+
+  const bottom = new THREE.Mesh(geometry, materialDown);
+
+  bottom.rotation.x = -Math.PI / 2;
+  bottom.position.z = 1.5;
+  bottom.position.y = -1.5;
+
+  scene.add(bottom);
+
+  // Configuración de la cámara
+  camera.position.z = 1.5;
+
+  // Animación
+  const animate = () => {
+    requestAnimationFrame(animate);
+
+    camera.rotation.y += direction * velocity;
+
+    renderer.render(scene, camera);
+  };
+
+  animate();
+
+  // ABOUT BUTTON
+  const aboutBtn = document.getElementById("aboutBtn");
+  const aboutBox = document.getElementById("aboutBox");
+
+  aboutBtn.addEventListener("click", () => {
+    aboutBox.classList.toggle("show");
+  });
+
+});
+</script>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+  filter: contrast(1.6);
+}
+
+/* ABOUT BUTTON */
+
+#aboutBtn {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255,255,255,0.15);
+
+  color: white;
+
+  padding: 8px 14px;
+
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(6px);
+
+  font-size: 13px;
+
+  transition: 0.2s;
+
+  z-index: 1000;
+}
+
+#aboutBtn:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+#aboutBox {
+  position: fixed;
+
+  bottom: 60px;
+  right: 15px;
+
+  width: 240px;
+
+  background: rgba(0,0,0,0.45);
+
+  border: 1px solid rgba(255,255,255,0.12);
+
+  color: white;
+
+  padding: 14px;
+
+  border-radius: 14px;
+
+  backdrop-filter: blur(10px);
+
+  font-family: sans-serif;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateY(10px);
+
+  transition: 0.25s;
+
+  z-index: 1000;
+}
+
+#aboutBox.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#aboutBox h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+
+  font-size: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<button id="aboutBtn">About</button>
+
+<div id="aboutBox">
+  <h3>Panoramas MINECRAFT</h3>
+
+  <p>Visor de panoramas compatible con múltiples versiones de Minecraft.</p>
+  <p>Lista de versiones disponibles <br>1.11<br>1.12<br>1.14<br>1.16<br>1.17<br>1.18<br>1.19<br>1.20<br>1.21<br>1.21.50<br>1.21.70<br>1.21.90<br>1.21.111<br>1.21.130<br>26.1</p>
+  <p>Creado por DIEGOKUGAMER541</p>
+</div>
+
+</body>
 </html>
+
 <script
   defer
   src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516"
