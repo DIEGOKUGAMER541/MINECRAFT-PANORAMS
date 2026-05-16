@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panoramas MINECRAFT</title>
+<title>Panoramas Minecraft</title>
 
 <link
   rel="icon"
@@ -158,10 +158,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
   scene.add(bottom);
 
-  // Configuración de la cámara
   camera.position.z = 1.5;
 
-  // Animación
   const animate = () => {
     requestAnimationFrame(animate);
 
@@ -172,7 +170,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   animate();
 
-  // ABOUT BUTTON
   const aboutBtn = document.getElementById("aboutBtn");
   const aboutBox = document.getElementById("aboutBox");
 
@@ -194,7 +191,6 @@ canvas {
   filter: contrast(1.6);
 }
 
-/* ABOUT BUTTON */
 
 #aboutBtn {
   position: fixed;
@@ -273,6 +269,31 @@ canvas {
 
   font-size: 15px;
 }
+.versions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.versions a {
+  text-decoration: none;
+  color: white;
+
+  background: rgba(255,255,255,0.08);
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  transition: 0.2s;
+
+  font-size: 12px;
+}
+
+.versions a:hover {
+  background: rgba(255,255,255,0.18);
+}
 </style>
 </head>
 
@@ -283,7 +304,25 @@ canvas {
 <div id="aboutBox">
   <h3>Panoramas MINECRAFT</h3>
   <p>Visor de panoramas compatible con múltiples versiones de Minecraft.</p>
-  <p>Lista de versiones disponibles <br>1.11<br>1.12<br>1.14<br>1.16<br>1.17<br>1.18<br>1.19<br>1.20<br>1.21<br>1.21.50<br>1.21.70<br>1.21.90<br>1.21.111<br>1.21.130<br>26.1</p>
+  <p>Lista de versiones disponibles</p>
+
+<div class="versions">
+  <a href="?v=1.11">1.11</a>
+  <a href="?v=1.12">1.12</a>
+  <a href="?v=1.14">1.14</a>
+  <a href="?v=1.16">1.16</a>
+  <a href="?v=1.17">1.17</a>
+  <a href="?v=1.18">1.18</a>
+  <a href="?v=1.19">1.19</a>
+  <a href="?v=1.20">1.20</a>
+  <a href="?v=1.21">1.21</a>
+  <a href="?v=1.21.50">1.21.50</a>
+  <a href="?v=1.21.70">1.21.70</a>
+  <a href="?v=1.21.90">1.21.90</a>
+  <a href="?v=1.21.111">1.21.111</a>
+  <a href="?v=1.21.130">1.21.130</a>
+  <a href="?v=26.1">26.1</a>
+</div>
   <p>Para cambiar el panorama tienes que escribir en la url lo siguiente <br> ?v=1.21.111</p>
   <p>Creado por DIEGOKUGAMER541</p>
 </div>
