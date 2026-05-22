@@ -20,6 +20,8 @@ const data = [...new URLSearchParams(location.href.split("?")[1])].reduce(
 );
 
 const VALID_VERSIONS = [
+  "beta",
+  "preview",
   "1.11",
   "1.12",
   "1.14",
@@ -307,6 +309,8 @@ canvas {
   <p>Lista de versiones disponibles</p>
   <p>Para cambiar el panorama puedes seleccionarlas de aqui</p>
 <div class="versions">
+  <a href="?v=beta">Beta</a>
+  <a href="?v=preview">Preview</a>
   <a href="?v=1.11">1.11</a>
   <a href="?v=1.12">1.12</a>
   <a href="?v=1.14">1.14</a>
