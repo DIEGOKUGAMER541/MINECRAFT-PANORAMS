@@ -1,351 +1,234 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panoramas Minecraft</title>
-
-<link
-  rel="icon"
-  href="https://mc-heads.net/avatar/diegokugamer541"
-  type="image/png"
-/>
-
-<script type="module">
-import * as THREE from "https://unpkg.com/three/build/three.module.js";
-
-const data = [...new URLSearchParams(location.href.split("?")[1])].reduce(
-  (a, [k, v]) => ((a[k] = v), a),
-  {},
-);
-
-const VALID_VERSIONS = [
-  "beta",
-  "preview",
-  "1.2",
-  "1.8",
-  "1.11",
-  "1.12",
-  "1.14",
-  "1.16",
-  "1.17",
-  "1.18",
-  "1.19",
-  "1.20",
-  "1.21",
-  "1.21.50",
-  "1.21.70",
-  "1.21.90",
-  "1.21.90 VV",
-  "1.21.111",
-  "1.21.111 VV",
-  "1.21.130",
-  "1.21.130 VV",
-  "26.1",
-  "26.1 VV",
-];
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panoramas Minecraft</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="icon"
+      href="https://mc-heads.net/avatar/diegokugamer541"
+      type="image/png"
+    />
+
+    <script type="module">
+      import * as THREE from "https://unpkg.com/three/build/three.module.js";
+
+      const data = [...new URLSearchParams(location.href.split("?")[1])].reduce(
+        (a, [k, v]) => ((a[k] = v), a),
+        {},
+      );
+
+      const VALID_VERSIONS = [
+        "beta",
+        "preview",
+        "navidad",
+        "hallowen21",
+        "hallowen22",
+        "1.2",
+        "1.8",
+        "1.11",
+        "1.12",
+        "1.14",
+        "1.16",
+        "1.17",
+        "1.18",
+        "1.19",
+        "1.20",
+        "1.21",
+        "1.21.50",
+        "1.21.70",
+        "1.21.90",
+        "1.21.90 VV",
+        "1.21.111",
+        "1.21.111 VV",
+        "1.21.130",
+        "1.21.130 VV",
+        "26.1 VV",
+        "26.1",
+      ];
 
-const rightMovement = ["1.21.111"];
+      const rightMovement = ["1.21.111"];
 
-const DEFAULT_VERSION = VALID_VERSIONS[VALID_VERSIONS.length - 1];
+      const DEFAULT_VERSION = VALID_VERSIONS[VALID_VERSIONS.length - 1];
 
-const version = VALID_VERSIONS.includes(data.v)
-  ? data.v
-  : DEFAULT_VERSION;
+      const version = VALID_VERSIONS.includes(data.v)
+        ? data.v
+        : DEFAULT_VERSION;
 
-const velocity = isNaN(Number(data.r))
-  ? 0.0004
-  : Number(data.r);
+      const velocity = isNaN(Number(data.r)) ? 0.0004 : Number(data.r);
 
-const direction = rightMovement.includes(version)
-  ? 1
-  : -1;
+      const direction = rightMovement.includes(version) ? 1 : -1;
 
-window.addEventListener("DOMContentLoaded", () => {
+      window.addEventListener("DOMContentLoaded", () => {
+        const scene = new THREE.Scene();
 
-  const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000,
+        );
 
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000,
-  );
+        const renderer = new THREE.WebGLRenderer();
 
-  const renderer = new THREE.WebGLRenderer();
+        THREE.ColorManagement.legacyMode = false;
 
-  THREE.ColorManagement.legacyMode = false;
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
-  renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.setSize(window.innerWidth, window.innerHeight);
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.toneMapping = THREE.LinearToneMapping;
+        renderer.gammaOutput = false;
 
-  renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.toneMapping = THREE.LinearToneMapping;
-  renderer.gammaOutput = false;
+        window.addEventListener("resize", onWindowResize, false);
 
-  window.addEventListener("resize", onWindowResize, false);
+        function onWindowResize() {
+          camera.aspect = window.innerWidth / window.innerHeight;
 
-  function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
 
-    camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        }
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  }
+        document.body.appendChild(renderer.domElement);
 
-  document.body.appendChild(renderer.domElement);
+        const geometry = new THREE.PlaneGeometry(3, 3);
 
-  // Crear un plano
-  const geometry = new THREE.PlaneGeometry(3, 3);
+        const textureLoader = new THREE.TextureLoader();
 
-  const textureLoader = new THREE.TextureLoader();
+        function loadMaterial(n) {
+          return new THREE.MeshBasicMaterial({
+            map: textureLoader.load(`./${version}/panorama_${n}.png`),
+            color: new THREE.Color(0xffffff).multiplyScalar(0.5),
+          });
+        }
 
-  function loadMaterial(n) {
-    return new THREE.MeshBasicMaterial({
-      map: textureLoader.load(
-        `./${version}/panorama_${n}.png`,
-      ),
-      color: new THREE.Color(0xffffff).multiplyScalar(0.5),
-    });
-  }
+        const materialFront = loadMaterial(0);
 
-  const materialFront = loadMaterial(0);
+        const front = new THREE.Mesh(geometry, materialFront);
 
-  const front = new THREE.Mesh(geometry, materialFront);
+        scene.add(front);
 
-  scene.add(front);
+        const materialRight = loadMaterial(1);
 
-  const materialRight = loadMaterial(1);
+        const left = new THREE.Mesh(geometry, materialRight);
 
-  const left = new THREE.Mesh(geometry, materialRight);
+        left.rotation.y = -Math.PI / 2;
+        left.position.x = 1.5;
+        left.position.z = 1.5;
 
-  left.rotation.y = -Math.PI / 2;
-  left.position.x = 1.5;
-  left.position.z = 1.5;
+        scene.add(left);
 
-  scene.add(left);
+        const materialBack = loadMaterial(2);
 
-  const materialBack = loadMaterial(2);
+        const back = new THREE.Mesh(geometry, materialBack);
 
-  const back = new THREE.Mesh(geometry, materialBack);
+        back.rotation.y = Math.PI;
+        back.position.z = 3;
 
-  back.rotation.y = Math.PI;
-  back.position.z = 3;
-
-  scene.add(back);
-
-  const materialLeft = loadMaterial(3);
-
-  const right = new THREE.Mesh(geometry, materialLeft);
-
-  right.rotation.y = Math.PI / 2;
-  right.position.x = -1.5;
-  right.position.z = 1.5;
-
-  scene.add(right);
-
-  const materialUp = loadMaterial(4);
-
-  const top = new THREE.Mesh(geometry, materialUp);
-
-  top.rotation.x = Math.PI / 2;
-  top.position.z = 1.5;
-  top.position.y = 1.5;
-
-  scene.add(top);
-
-  const materialDown = loadMaterial(5);
-
-  const bottom = new THREE.Mesh(geometry, materialDown);
-
-  bottom.rotation.x = -Math.PI / 2;
-  bottom.position.z = 1.5;
-  bottom.position.y = -1.5;
-
-  scene.add(bottom);
-
-  camera.position.z = 1.5;
-
-  const animate = () => {
-    requestAnimationFrame(animate);
-
-    camera.rotation.y += direction * velocity;
-
-    renderer.render(scene, camera);
-  };
-
-  animate();
-
-  const aboutBtn = document.getElementById("aboutBtn");
-  const aboutBox = document.getElementById("aboutBox");
-
-  aboutBtn.addEventListener("click", () => {
-    aboutBox.classList.toggle("show");
-  });
-
-});
-</script>
-
-<style>
-body {
-  margin: 0;
-  overflow: hidden;
-}
-
-canvas {
-  display: block;
-  filter: contrast(1.6);
-}
-
-
-#aboutBtn {
-  position: fixed;
-  bottom: 15px;
-  right: 15px;
-
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255,255,255,0.15);
-
-  color: white;
-
-  padding: 8px 14px;
-
-  border-radius: 999px;
-
-  cursor: pointer;
-
-  backdrop-filter: blur(6px);
-
-  font-size: 13px;
-
-  transition: 0.2s;
-
-  z-index: 1000;
-}
-
-#aboutBtn:hover {
-  background: rgba(255,255,255,0.12);
-}
-
-#aboutBox {
-  position: fixed;
-
-  bottom: 60px;
-  right: 15px;
-
-  width: 240px;
-
-  background: rgba(0,0,0,0.45);
-
-  border: 1px solid rgba(255,255,255,0.12);
-
-  color: white;
-
-  padding: 14px;
-
-  border-radius: 14px;
-
-  backdrop-filter: blur(10px);
-
-  font-family: sans-serif;
-
-  font-size: 13px;
-
-  line-height: 1.5;
-
-  opacity: 0;
-  visibility: hidden;
-
-  transform: translateY(10px);
-
-  transition: 0.25s;
-
-  z-index: 1000;
-}
-
-#aboutBox.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-#aboutBox h3 {
-  margin-top: 0;
-  margin-bottom: 8px;
-
-  font-size: 15px;
-}
-.versions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.versions a {
-  text-decoration: none;
-  color: white;
-
-  background: rgba(255,255,255,0.08);
-
-  padding: 5px 10px;
-
-  border-radius: 999px;
-
-  transition: 0.2s;
-
-  font-size: 12px;
-}
-
-.versions a:hover {
-  background: rgba(255,255,255,0.18);
-}
-</style>
-</head>
-
-<body>
-
-<button id="aboutBtn">About</button>
-
-<div id="aboutBox">
-  <h3>Panoramas MINECRAFT</h3>
-  <p>Visor de panoramas compatible con múltiples versiones de Minecraft.</p>
-  <p>Lista de versiones disponibles</p>
-  <p>Para cambiar el panorama puedes seleccionarlas de aqui</p>
-<div class="versions">
-  <a href="?v=beta">Beta</a>
-  <a href="?v=preview">Preview</a>
-  <a href="?v=1.2">1.2</a>
-  <a href="?v=1.8">1.8</a>
-  <a href="?v=1.11">1.11</a>
-  <a href="?v=1.12">1.12</a>
-  <a href="?v=1.14">1.14</a>
-  <a href="?v=1.16">1.16</a>
-  <a href="?v=1.17">1.17</a>
-  <a href="?v=1.18">1.18</a>
-  <a href="?v=1.19">1.19</a>
-  <a href="?v=1.20">1.20</a>
-  <a href="?v=1.21">1.21</a>
-  <a href="?v=1.21.50">1.21.50</a>
-  <a href="?v=1.21.70">1.21.70</a>
-  <a href="?v=1.21.90">1.21.90</a>
-  <a href="?v=1.21.111">1.21.111</a>
-  <a href="?v=1.21.130">1.21.130</a>
-  <a href="?v=26.1">26.1</a>
-</div>
-<p>Vibrant Visuals</p>
-<div class="versions"> 
-  <a href="?v=1.21.90 VV">1.21.90</a>
-  <a href="?v=1.21.111 VV">1.21.111</a>
-  <a href="?v=1.21.130 VV">1.21.130</a>
-  <a href="?v=26.1 VV">26.1</a>
-</div>
-  <p>Creado por DIEGOKUGAMER541</p>
-</div>
-
-</body>
+        scene.add(back);
+
+        const materialLeft = loadMaterial(3);
+
+        const right = new THREE.Mesh(geometry, materialLeft);
+
+        right.rotation.y = Math.PI / 2;
+        right.position.x = -1.5;
+        right.position.z = 1.5;
+
+        scene.add(right);
+
+        const materialUp = loadMaterial(4);
+
+        const top = new THREE.Mesh(geometry, materialUp);
+
+        top.rotation.x = Math.PI / 2;
+        top.position.z = 1.5;
+        top.position.y = 1.5;
+
+        scene.add(top);
+
+        const materialDown = loadMaterial(5);
+
+        const bottom = new THREE.Mesh(geometry, materialDown);
+
+        bottom.rotation.x = -Math.PI / 2;
+        bottom.position.z = 1.5;
+        bottom.position.y = -1.5;
+
+        scene.add(bottom);
+
+        camera.position.z = 1.5;
+
+        const animate = () => {
+          requestAnimationFrame(animate);
+
+          camera.rotation.y += direction * velocity;
+
+          renderer.render(scene, camera);
+        };
+
+        animate();
+
+        const aboutBtn = document.getElementById("aboutBtn");
+        const aboutBox = document.getElementById("aboutBox");
+
+        aboutBtn.addEventListener("click", () => {
+          aboutBox.classList.toggle("show");
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <button id="aboutBtn">About</button>
+
+    <div id="aboutBox">
+      <h3>Panoramas MINECRAFT</h3>
+      <p>Visor de panoramas compatible con múltiples versiones de Minecraft.</p>
+      <p>Lista de versiones disponibles</p>
+      <p>Para cambiar el panorama puedes seleccionarlas de aqui</p>
+      <p>Bedrock</p>
+      <div class="versions">
+        <a href="?v=beta">MOVIL</a>
+        <a href="?v=preview">PC</a>
+        <a href="?v=1.2">1.2</a>
+        <a href="?v=1.8">1.8</a>
+        <a href="?v=1.11">1.11</a>
+        <a href="?v=1.12">1.12</a>
+        <a href="?v=1.14">1.14</a>
+        <a href="?v=1.16">1.16</a>
+        <a href="?v=1.17">1.17</a>
+        <a href="?v=1.18">1.18</a>
+        <a href="?v=1.19">1.19</a>
+        <a href="?v=1.20">1.20</a>
+        <a href="?v=1.21">1.21</a>
+        <a href="?v=1.21.50">1.21.50</a>
+        <a href="?v=1.21.70">1.21.70</a>
+        <a href="?v=1.21.90">1.21.90</a>
+        <a href="?v=1.21.111">1.21.111</a>
+        <a href="?v=1.21.130">1.21.130</a>
+        <a href="?v=26.1">26.1</a>
+      </div>
+      <p>Vibrant Visuals</p>
+      <div class="versions">
+        <a href="?v=1.21.90 VV">1.21.90</a>
+        <a href="?v=1.21.111 VV">1.21.111</a>
+        <a href="?v=1.21.130 VV">1.21.130</a>
+        <a href="?v=26.1 VV">26.1</a>
+      </div>
+      <p>Fechas especiales</p>
+      <div class="versions">
+        <a href="?v=navidad">Navidad</a>
+        <a href="?v=hallowen21">Hallowen 2021</a>
+        <a href="?v=hallowen22">Hallowen 2022</a>
+      </div>
+      <p>Creado por DIEGOKUGAMER541</p>
+    </div>
+  </body>
 </html>
 
 <script

@@ -1,0 +1,112 @@
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      canvas {
+        display: block;
+        filter: contrast(1.6);
+      }
+
+      #aboutBtn {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+
+        color: white;
+
+        padding: 8px 14px;
+
+        border-radius: 999px;
+
+        cursor: pointer;
+
+        backdrop-filter: blur(6px);
+
+        font-size: 13px;
+
+        transition: 0.2s;
+
+        z-index: 1000;
+      }
+
+      #aboutBtn:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      #aboutBox {
+        position: fixed;
+
+        bottom: 60px;
+        right: 15px;
+
+        width: 240px;
+
+        background: rgba(0, 0, 0, 0.45);
+
+        border: 1px solid rgba(255, 255, 255, 0.12);
+
+        color: white;
+
+        padding: 14px;
+
+        border-radius: 14px;
+
+        backdrop-filter: blur(10px);
+
+        font-family: sans-serif;
+
+        font-size: 13px;
+
+        line-height: 1.5;
+
+        opacity: 0;
+        visibility: hidden;
+
+        transform: translateY(10px);
+
+        transition: 0.25s;
+
+        z-index: 1000;
+      }
+
+      #aboutBox.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #aboutBox h3 {
+        margin-top: 0;
+        margin-bottom: 8px;
+
+        font-size: 15px;
+      }
+      .versions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .versions a {
+        text-decoration: none;
+        color: white;
+
+        background: rgba(255, 255, 255, 0.08);
+
+        padding: 5px 10px;
+
+        border-radius: 999px;
+
+        transition: 0.2s;
+
+        font-size: 12px;
+      }
+
+      .versions a:hover {
+        background: rgba(255, 255, 255, 0.18);
+      }
